@@ -22,8 +22,9 @@
   "dependencies": {
     "axios": "^0.17.1",
     "ayax-common-types": "^1.1.10",
-    "moment": "^2.20.1",
-    "typescript": "^2.7.2"
+    "moment": "^2.20.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "typescript": "^2.7.2"
+  }
 }
