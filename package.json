@@ -1,0 +1,29 @@
+{
+  "name": "ayax-common-cache",
+  "version": "0.0.1",
+  "description": "Ayax Common Services",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maphskiy/ayax-common-cache.git"
+  },
+  "author": "maphskiy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maphskiy/ayax-common-cache/issues"
+  },
+  "homepage": "https://github.com/maphskiy/ayax-common-cache#readme",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "ayax-common-types": "^1.1.10",
+    "moment": "^2.20.1",
+    "typescript": "^2.7.2"
+  },
+  "devDependencies": {}
+}
