@@ -56,6 +56,9 @@ export class CacheService implements ICacheService {
 
     private async Fetch<T>(method: string, url: string, data?: any): Promise<T[]> {
         try {
+            if(this._staticCache[url]) {
+                return this._staticCache[url];
+            }
             switch(method.toLocaleLowerCase()) {
                 case 'get':
                 let get = (await this._operationService.get<T[]>(url)).data;
