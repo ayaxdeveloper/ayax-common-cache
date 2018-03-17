@@ -27,6 +27,14 @@ export class CacheService implements ICacheService {
         return this.TryFromCache<CacheItem>('get', url, null);
     }
 
+    public async ListAsDictionary(dictionary: string, method?: string): Promise<CacheDictionary> {
+        let cacheDictionary: CacheDictionary = {};
+        (await this.List(dictionary, method)).forEach(x => {
+            cacheDictionary[<string>x.id] = x;
+        });
+        return cacheDictionary;
+    }
+
     public Search<T>(dictionary: string, data?: any, method?: string): Promise<T[]> {
         let url = method ? `/${dictionary}/${method}` : `/${dictionary}/search`;
         return this.TryFromCache<T>('search', url, data);
@@ -103,3 +111,5 @@ class CacheObject<T> {
         }
     }
 }
+
+export type CacheDictionary = {[index: string]: CacheItem};
