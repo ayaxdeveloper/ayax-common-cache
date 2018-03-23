@@ -1,5 +1,5 @@
 import { ICacheService } from "../types/cache-service";
-import { IOperationService, OperationResult, SearchResponse, OperationStatus } from 'ayax-common-types';
+import { IOperationService, OperationResult, SearchResponse, OperationStatus, SelectItem } from 'ayax-common-types';
 import * as moment from 'moment';
 import { CacheItem } from "../types/cache-item";
 
@@ -33,6 +33,10 @@ export class CacheService implements ICacheService {
             cacheDictionary[<string>x.id] = x;
         });
         return cacheDictionary;
+    }
+
+    public async ListAsSelectItems(dictionary: string, method?: string): Promise<SelectItem[]> {
+        return (await this.List(dictionary, method)).map(x => new SelectItem({text: x.name, value: x.id}));
     }
 
     public Search<T>(dictionary: string, data?: any, method?: string): Promise<T[]> {
