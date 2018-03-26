@@ -2,6 +2,8 @@ import { ICacheService } from "../types/cache-service";
 import { IOperationService, OperationResult, SearchResponse, OperationStatus } from 'ayax-common-types';
 import * as moment from 'moment';
 import { CacheItem } from "../types/cache-item";
+import { CacheObject } from "../types/cache-object";
+import { CacheHelper } from "../helpers/cache-helper";
 
 export class CacheService implements ICacheService {
     private _operationService: IOperationService;
@@ -15,43 +17,21 @@ export class CacheService implements ICacheService {
     }
 
     public Get<T>(url: string): Promise<T[]> {
-        return this.TryFromCache<T>('get', url, null);
+        return CacheHelper.TryFromCache<T>(this.Fetch<T>('get', url), this._cacheExpiresAfter, 'get', url, null);
     }
 
     public Post<T>(url: string, data?: any): Promise<T[]> {
-        return this.TryFromCache<T>('post', url, data);
+        return CacheHelper.TryFromCache<T>(this.Fetch<T>('post', url, data), this._cacheExpiresAfter, 'post', url, data);
     }
 
     public List(dictionary: string, method?: string): Promise<CacheItem[]> {
         let url = method ? `/${dictionary}/${method}` : `/${dictionary}/list`;
-        return this.TryFromCache<CacheItem>('get', url, null);
+        return CacheHelper.TryFromCache<CacheItem>(this.Fetch<CacheItem>('get', url), this._cacheExpiresAfter, 'get', url, null);
     }
 
     public Search<T>(dictionary: string, data?: any, method?: string): Promise<T[]> {
         let url = method ? `/${dictionary}/${method}` : `/${dictionary}/search`;
-        return this.TryFromCache<T>('search', url, data);
-    }
-
-    private TryFromCache<T>(method: string, url: string, data?: any, ): Promise<T[]> {
-        return new Promise((resolve) => {
-            let storage = localStorage.getItem(url);
-            if(storage) {
-                let cache: CacheObject<T> = JSON.parse(storage);
-                if(moment(cache.expires).isAfter() && cache.data.length > 0) {
-                    resolve(cache.data);
-                } else {
-                    this.Fetch<T>(method, url, data).then((response) => {
-                        this.ToCache(url, response);
-                        resolve(response);
-                    });
-                }
-            } else {
-                this.Fetch<T>(method, url, data).then((response) => {
-                    this.ToCache(url, response);
-                    resolve(response);
-                });
-            }
-        })
+        return CacheHelper.TryFromCache<T>(this.Fetch<T>('search', url, data), this._cacheExpiresAfter, 'search', url, data);
     }
 
     private async Fetch<T>(method: string, url: string, data?: any): Promise<T[]> {
@@ -87,19 +67,5 @@ export class CacheService implements ICacheService {
             console.error(`Ошибка получения справочника url=${url} method=${method} data=${JSON.stringify(data)} ${JSON.stringify(e)}`);
         }
         return [];
-    }
-
-    private ToCache<T>(name: string, data: T[]) {
-        localStorage.setItem(name.toLowerCase(), JSON.stringify(new CacheObject<T>({ data: data, expires: moment().add(this._cacheExpiresAfter, "m").toDate()})));
-    }
-}
-
-class CacheObject<T> {
-    data: T[] = new Array<T>();
-    expires: Date = new Date();
-    constructor(init?: Partial<CacheObject<T>>) {
-        if(init) {
-            Object.assign(this, init);
-        }
-    }
+    }   
 }
