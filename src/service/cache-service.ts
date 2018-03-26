@@ -29,6 +29,14 @@ export class CacheService implements ICacheService {
         return CacheHelper.TryFromCache<CacheItem>(this.Fetch<CacheItem>('get', url), this._cacheExpiresAfter, 'get', url, null);
     }
 
+    public async ListAsDictionary(dictionary: string, method?: string): Promise<CacheDictionary> {
+        let cacheDictionary: CacheDictionary = {};
+        (await this.List(dictionary, method)).forEach(x => {
+            cacheDictionary[<string>x.id] = x;
+        });
+        return cacheDictionary;
+    }
+
     public Search<T>(dictionary: string, data?: any, method?: string): Promise<T[]> {
         let url = method ? `/${dictionary}/${method}` : `/${dictionary}/search`;
         return CacheHelper.TryFromCache<T>(this.Fetch<T>('search', url, data), this._cacheExpiresAfter, 'search', url, data);
@@ -67,5 +75,7 @@ export class CacheService implements ICacheService {
             console.error(`Ошибка получения справочника url=${url} method=${method} data=${JSON.stringify(data)} ${JSON.stringify(e)}`);
         }
         return [];
-    }   
+    }
 }
+
+export type CacheDictionary = {[index: string]: CacheItem};
