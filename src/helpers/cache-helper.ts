@@ -8,6 +8,9 @@ export const CacheHelper = {
         localStorage.setItem(name.toLowerCase(), JSON.stringify(new CacheObject<T>({ data: data, expires: moment().add(cacheExpiresAfter, "m").toDate()})));
     },
     TryFromCache<T>(fetchPromise: Promise<T[]>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+        if(data) {
+            url = `${url}_${JSON.stringify(data)}`;
+        }
         return new Promise((resolve) => {
             let storage = localStorage.getItem(url);
             if(storage) {
@@ -29,6 +32,9 @@ export const CacheHelper = {
         })
     },
     TryOperationPromiseFromCache<T>(fetchPromise: AxiosPromise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+        if(data) {
+            url = `${url}_${JSON.stringify(data)}`;
+        }
         return new Promise((resolve) => {
             let storage = localStorage.getItem(url);
             if(storage) {
@@ -50,6 +56,9 @@ export const CacheHelper = {
         })
     },
     TryOperationSearchResponseFromCache<T>(fetchPromise: AxiosPromise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+        if(data) {
+            url = `${url}_${JSON.stringify(data)}`;
+        }
         return new Promise((resolve) => {
             let storage = localStorage.getItem(url);
             if(storage) {
