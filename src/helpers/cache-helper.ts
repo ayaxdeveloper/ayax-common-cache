@@ -1,6 +1,6 @@
 import { CacheObject } from "../types/cache-object";
 import * as moment from 'moment';
-import { SearchResponse } from "ayax-common-types";
+import { SearchResponse, OperationResult } from "ayax-common-types";
 import { AxiosPromise } from "axios";
 
 export const CacheHelper = {
@@ -28,7 +28,7 @@ export const CacheHelper = {
             }
         })
     },
-    TryAxiosPromiseFromCache<T>(fetchPromise: AxiosPromise<T[]>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+    TryOperationPromiseFromCache<T>(fetchPromise: AxiosPromise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         return new Promise((resolve) => {
             let storage = localStorage.getItem(url);
             if(storage) {
@@ -37,19 +37,19 @@ export const CacheHelper = {
                     resolve(cache.data);
                 } else {
                     fetchPromise.then((response) => {
-                        CacheHelper.ToCache(url, response.data, cacheExpiresAfter);
-                        resolve(response.data);
+                        CacheHelper.ToCache(url, response.data.result, cacheExpiresAfter);
+                        resolve(response.data.result);
                     });
                 }
             } else {
                 fetchPromise.then((response) => {
-                    CacheHelper.ToCache(url, response.data, cacheExpiresAfter);
-                    resolve(response.data);
+                    CacheHelper.ToCache(url, response.data.result, cacheExpiresAfter);
+                    resolve(response.data.result);
                 });
             }
         })
     },
-    TryAxiosSearchResponseFromCache<T>(fetchPromise: AxiosPromise<SearchResponse<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+    TryOperationSearchResponseFromCache<T>(fetchPromise: AxiosPromise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         return new Promise((resolve) => {
             let storage = localStorage.getItem(url);
             if(storage) {
@@ -58,35 +58,14 @@ export const CacheHelper = {
                     resolve(cache.data);
                 } else {
                     fetchPromise.then((response) => {
-                        CacheHelper.ToCache(url, response.data.data, cacheExpiresAfter);
-                        resolve(response.data.data);
+                        CacheHelper.ToCache(url, response.data.result.data, cacheExpiresAfter);
+                        resolve(response.data.result.data);
                     });
                 }
             } else {
                 fetchPromise.then((response) => {
-                    CacheHelper.ToCache(url, response.data.data, cacheExpiresAfter);
-                    resolve(response.data.data);
-                });
-            }
-        })
-    },
-    TrySearchResponseFromCache<T>(fetchPromise: Promise<SearchResponse<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
-        return new Promise((resolve) => {
-            let storage = localStorage.getItem(url);
-            if(storage) {
-                let cache: CacheObject<T> = JSON.parse(storage);
-                if(moment(cache.expires).isAfter() && cache.data.length > 0) {
-                    resolve(cache.data);
-                } else {
-                    fetchPromise.then((response) => {
-                        CacheHelper.ToCache(url, response.data, cacheExpiresAfter);
-                        resolve(response.data);
-                    });
-                }
-            } else {
-                fetchPromise.then((response) => {
-                    CacheHelper.ToCache(url, response.data, cacheExpiresAfter);
-                    resolve(response.data);
+                    CacheHelper.ToCache(url, response.data.result.data, cacheExpiresAfter);
+                    resolve(response.data.result.data);
                 });
             }
         })
