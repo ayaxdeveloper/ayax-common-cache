@@ -1,6 +1,10 @@
 {
   "name": "ayax-common-cache",
+<<<<<<< HEAD
   "version": "0.0.6",
+=======
+  "version": "1.0.0",
+>>>>>>> 724e2bbb07e4619d8fed44956ad4e64b404ae767
   "description": "Ayax Common Services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,7 +25,7 @@
   "homepage": "https://github.com/maphskiy/ayax-common-cache#readme",
   "dependencies": {
     "axios": "^0.17.1",
-    "ayax-common-types": "^1.1.10",
+    "ayax-common-types": "^1.2.0",
     "moment": "^2.20.1"
   },
   "devDependencies": {
