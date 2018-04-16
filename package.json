@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maphskiy/ayax-common-cache.git"
+    "url": "git+https://github.com/ayaxdeveloper/ayax-common-cache.git"
   },
   "author": "maphskiy",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/maphskiy/ayax-common-cache/issues"
+    "url": "https://github.com/ayaxdeveloper/ayax-common-cache/issues"
   },
-  "homepage": "https://github.com/maphskiy/ayax-common-cache#readme",
+  "homepage": "https://github.com/ayaxdeveloper/ayax-common-cache#readme",
   "dependencies": {
     "axios": "^0.17.1",
     "ayax-common-types": "^1.2.0",
