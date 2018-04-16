@@ -1,10 +1,6 @@
 {
   "name": "ayax-common-cache",
-<<<<<<< HEAD
-  "version": "0.0.6",
-=======
   "version": "1.0.0",
->>>>>>> 724e2bbb07e4619d8fed44956ad4e64b404ae767
   "description": "Ayax Common Services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
