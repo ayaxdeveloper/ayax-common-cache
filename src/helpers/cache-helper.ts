@@ -55,7 +55,7 @@ export const CacheHelper = {
             }
         })
     },
-    TryOperationSearchResponseFromCache<T>(fetchPromise: AxiosPromise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+    TryOperationSearchResponseFromCache<T>(fetchPromise: Promise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         if(data) {
             url = `${url}_${JSON.stringify(data)}`;
         }
@@ -67,14 +67,14 @@ export const CacheHelper = {
                     resolve(cache.data);
                 } else {
                     fetchPromise.then((response) => {
-                        CacheHelper.ToCache(url, response.data.result.data, cacheExpiresAfter);
-                        resolve(response.data.result.data);
+                        CacheHelper.ToCache(url, response.result.data, cacheExpiresAfter);
+                        resolve(response.result.data);
                     });
                 }
             } else {
                 fetchPromise.then((response) => {
-                    CacheHelper.ToCache(url, response.data.result.data, cacheExpiresAfter);
-                    resolve(response.data.result.data);
+                    CacheHelper.ToCache(url, response.result.data, cacheExpiresAfter);
+                    resolve(response.result.data);
                 });
             }
         })
