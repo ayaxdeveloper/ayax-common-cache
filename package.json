@@ -21,7 +21,8 @@
   "homepage": "https://github.com/ayaxdeveloper/ayax-common-cache#readme",
   "dependencies": {
     "axios": "^0.17.1",
-    "ayax-common-types": "^1.2.0",
+    "ayax-common-services": "^2.0.0",
+    "ayax-common-types": "^2.0.0",
     "moment": "^2.20.1"
   },
   "devDependencies": {

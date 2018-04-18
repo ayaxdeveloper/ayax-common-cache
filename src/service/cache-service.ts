@@ -1,9 +1,10 @@
 import { ICacheService } from "../types/cache-service";
-import { IOperationService, OperationResult, SearchResponse, OperationStatus, SelectItem } from 'ayax-common-types';
+import { OperationResult, SearchResponse, OperationStatus, SelectItem } from 'ayax-common-types';
 import * as moment from 'moment';
 import { CacheItem } from "../types/cache-item";
 import { CacheObject } from "../types/cache-object";
 import { CacheHelper } from "../helpers/cache-helper";
+import { IOperationService } from 'ayax-common-services';
 
 export class CacheService implements ICacheService {
     private _operationService: IOperationService;
@@ -53,21 +54,21 @@ export class CacheService implements ICacheService {
             }
             switch(method.toLocaleLowerCase()) {
                 case 'get':
-                let get = (await this._operationService.get<T[]>(url)).data;
+                let get = (await this._operationService.get<T[]>(url));
                 if(get.status == 0) {
                     return get.result;
                 } else {
                     throw new Error(get.message);
                 }
                 case 'post': 
-                let post = (await this._operationService.post<T[]>(url, data)).data;
+                let post = (await this._operationService.post<T[]>(url, data));
                 if(post.status == 0) {
                     return post.result;
                 } else {
                     throw new Error(post.message);
                 }
                 case 'search': 
-                let search = (await this._operationService.post<SearchResponse<T[]>>(url, data)).data;
+                let search = (await this._operationService.post<SearchResponse<T[]>>(url, data));
                 if(search.status == 0) {
                     return search.result.data;
                 } else {
