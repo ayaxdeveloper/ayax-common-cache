@@ -5,6 +5,7 @@ import { CacheItem } from "../types/cache-item";
 import { CacheObject } from "../types/cache-object";
 import { CacheHelper } from "../helpers/cache-helper";
 import { IOperationService } from 'ayax-common-services';
+import { ArraySortHelper } from "ayax-common-helpers";
 
 export class CacheService implements ICacheService {
     private _operationService: IOperationService;
@@ -25,9 +26,9 @@ export class CacheService implements ICacheService {
         return CacheHelper.TryFromCache<T>(this.Fetch<T>('post', url, data), this._cacheExpiresAfter, 'post', url, data);
     }
 
-    public List(dictionary: string, method?: string): Promise<CacheItem[]> {
+    public async List(dictionary: string, method?: string): Promise<CacheItem[]> {
         let url = method ? `/${dictionary}/${method}` : `/${dictionary}/list`;
-        return CacheHelper.TryFromCache<CacheItem>(this.Fetch<CacheItem>('get', url), this._cacheExpiresAfter, 'get', url, null);
+        return (await CacheHelper.TryFromCache<CacheItem>(this.Fetch<CacheItem>('get', url), this._cacheExpiresAfter, 'get', url, null)).sort(ArraySortHelper.byOrder);
     }
 
     public async ListAsDictionary(dictionary: string, method?: string): Promise<CacheDictionary> {
@@ -39,7 +40,7 @@ export class CacheService implements ICacheService {
     }
 
     public async ListAsSelectItems(dictionary: string, method?: string): Promise<SelectItem[]> {
-        return (await this.List(dictionary, method)).map(x => new SelectItem({text: x.name, value: x.id}));
+        return (await this.List(dictionary, method)).sort(ArraySortHelper.byOrder).map(x => new SelectItem({text: x.name, value: x.id}));
     }
 
     public Search<T>(dictionary: string, data?: any, method?: string): Promise<T[]> {

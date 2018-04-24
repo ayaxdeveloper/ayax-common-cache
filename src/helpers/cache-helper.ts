@@ -1,7 +1,7 @@
 import { CacheObject } from "../types/cache-object";
 import * as moment from 'moment';
 import { SearchResponse, OperationResult } from "ayax-common-types";
-import { AxiosPromise } from "axios";
+import { ArraySortHelper } from 'ayax-common-helpers';
 
 export const CacheHelper = {
     ToCache<T>(name: string, data: T[], cacheExpiresAfter: number) {
@@ -31,7 +31,7 @@ export const CacheHelper = {
             }
         })
     },
-    TryOperationPromiseFromCache<T>(fetchPromise: AxiosPromise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+    TryOperationPromiseFromCache<T>(fetchPromise: Promise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         if(data) {
             url = `${url}_${JSON.stringify(data)}`;
         }
@@ -43,14 +43,14 @@ export const CacheHelper = {
                     resolve(cache.data);
                 } else {
                     fetchPromise.then((response) => {
-                        CacheHelper.ToCache(url, response.data.result, cacheExpiresAfter);
-                        resolve(response.data.result);
+                        CacheHelper.ToCache(url, response.result, cacheExpiresAfter);
+                        resolve(response.result);
                     });
                 }
             } else {
                 fetchPromise.then((response) => {
-                    CacheHelper.ToCache(url, response.data.result, cacheExpiresAfter);
-                    resolve(response.data.result);
+                    CacheHelper.ToCache(url, response.result, cacheExpiresAfter);
+                    resolve(response.result);
                 });
             }
         })
