@@ -1,6 +1,6 @@
-import { CacheItem } from "./cache-item";
-import { CacheDictionary } from "..";
+import { CacheItem } from "./CacheItem";
 import { SelectItem } from "ayax-common-types";
+import { CacheDictionary } from "../service/CacheService";
 
 export interface ICacheService {
     Get<T>(url: string): Promise<T[]>;

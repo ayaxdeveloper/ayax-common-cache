@@ -1,4 +1,4 @@
-import { CacheObject } from "../types/cache-object";
+import { CacheObject } from "../types/CacheObject";
 import * as moment from 'moment';
 import { SearchResponse, OperationResult } from "ayax-common-types";
 import { ArraySortHelper } from 'ayax-common-helpers';

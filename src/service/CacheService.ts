@@ -1,9 +1,9 @@
-import { ICacheService } from "../types/cache-service";
+import { ICacheService } from "../types/ICacheService";
 import { OperationResult, SearchResponse, OperationStatus, SelectItem } from 'ayax-common-types';
 import * as moment from 'moment';
-import { CacheItem } from "../types/cache-item";
-import { CacheObject } from "../types/cache-object";
-import { CacheHelper } from "../helpers/cache-helper";
+import { CacheItem } from "../types/CacheItem";
+import { CacheObject } from "../types/CacheObject";
+import { CacheHelper } from "../helpers/CacheHelper";
 import { IOperationService } from 'ayax-common-services';
 import { ArraySortHelper } from "ayax-common-helpers";
 
@@ -40,7 +40,7 @@ export class CacheService implements ICacheService {
     }
 
     public async ListAsSelectItems(dictionary: string, method?: string): Promise<SelectItem[]> {
-        return (await this.List(dictionary, method)).sort(ArraySortHelper.byOrder).map(x => new SelectItem({text: x.name, value: x.id}));
+        return (await this.List(dictionary, method)).map(x => new SelectItem({text: x.name, value: x.id}));
     }
 
     public Search<T>(dictionary: string, data?: any, method?: string): Promise<T[]> {
