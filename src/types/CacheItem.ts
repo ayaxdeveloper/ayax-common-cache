@@ -3,6 +3,7 @@ import { guid } from "ayax-common-types";
 export class CacheItem {
     id: number | string | guid;
     name: string;
+    title: string;
     order: number = 0;
     isActive: boolean = true;
     notes: string;
