@@ -1,11 +1,9 @@
 import { ICacheService } from "../types/ICacheService";
-import { OperationResult, SearchResponse, OperationStatus, SelectItem } from 'ayax-common-types';
-import * as moment from 'moment';
+import { SearchResponse, SelectItem } from 'ayax-common-types';
 import { CacheItem } from "../types/CacheItem";
-import { CacheObject } from "../types/CacheObject";
 import { CacheHelper } from "../helpers/CacheHelper";
-import { IOperationService } from 'ayax-common-services';
 import { ArraySortHelper } from "ayax-common-helpers";
+import { IOperationService } from 'ayax-common-operation';
 
 export class CacheService implements ICacheService {
     private _operationService: IOperationService;
@@ -55,26 +53,11 @@ export class CacheService implements ICacheService {
             }
             switch(method.toLocaleLowerCase()) {
                 case 'get':
-                let get = (await this._operationService.get<T[]>(url));
-                if(get.status == 0) {
-                    return get.result;
-                } else {
-                    throw new Error(get.message);
-                }
+                return (await this._operationService.get<T[]>(url)).ensureSuccess();
                 case 'post': 
-                let post = (await this._operationService.post<T[]>(url, data));
-                if(post.status == 0) {
-                    return post.result;
-                } else {
-                    throw new Error(post.message);
-                }
+                return (await this._operationService.post<T[]>(url, data)).ensureSuccess();
                 case 'search': 
-                let search = (await this._operationService.post<SearchResponse<T[]>>(url, data));
-                if(search.status == 0) {
-                    return search.result.data;
-                } else {
-                    throw new Error(search.message);
-                }
+                return (await this._operationService.post<SearchResponse<T[]>>(url, data)).ensureSuccess().data;
             }
             
         } catch (e) {

@@ -1,7 +1,7 @@
 import { CacheObject } from "../types/CacheObject";
 import * as moment from 'moment';
-import { SearchResponse, OperationResult } from "ayax-common-types";
-import { ArraySortHelper } from 'ayax-common-helpers';
+import { SearchResponse } from "ayax-common-types";
+import { OperationResult } from "ayax-common-operation";
 
 export const CacheHelper = {
     ToCache<T>(name: string, data: T[], cacheExpiresAfter: number) {
