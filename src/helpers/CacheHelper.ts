@@ -7,7 +7,7 @@ export const CacheHelper = {
     ToCache<T>(name: string, data: T[], cacheExpiresAfter: number) {
         localStorage.setItem(name.toLowerCase(), JSON.stringify(new CacheObject<T>({ data: data, expires: moment().add(cacheExpiresAfter, "m").toDate()})));
     },
-    TryFromCache<T>(fetchPromise: Promise<T[]>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+    TryFromCache<T>(fetchPromise: () => Promise<T[]>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         if(data) {
             url = `${url}_${JSON.stringify(data)}`;
         }
@@ -18,13 +18,13 @@ export const CacheHelper = {
                 if(moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
-                    fetchPromise.then((response) => {
+                    fetchPromise().then((response) => {
                         CacheHelper.ToCache(url, response, cacheExpiresAfter);
                         resolve(response);
                     });
                 }
             } else {
-                fetchPromise.then((response) => {
+                fetchPromise().then((response) => {
                     CacheHelper.ToCache(url, response, cacheExpiresAfter);
                     resolve(response);
                 });
