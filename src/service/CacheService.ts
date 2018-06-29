@@ -24,21 +24,21 @@ export class CacheService implements ICacheService {
         return CacheHelper.TryFromCache<T>(this.Fetch<T>('post', url, data), this._cacheExpiresAfter, 'post', url, data);
     }
 
-    public async List(dictionary: string, method?: string): Promise<CacheItem[]> {
+    public async List(dictionary: string, method?: string, data?: any): Promise<CacheItem[]> {
         let url = method ? `/${dictionary}/${method}` : `/${dictionary}/list`;
-        return (await CacheHelper.TryFromCache<CacheItem>(this.Fetch<CacheItem>('get', url), this._cacheExpiresAfter, 'get', url, null)).sort(ArraySortHelper.byOrder);
+        return (await CacheHelper.TryFromCache<CacheItem>(this.Fetch<CacheItem>('get', url), this._cacheExpiresAfter, 'get', url, data)).sort(ArraySortHelper.byOrder);
     }
 
-    public async ListAsDictionary(dictionary: string, method?: string): Promise<CacheDictionary> {
+    public async ListAsDictionary(dictionary: string, method?: string, data?: any): Promise<CacheDictionary> {
         let cacheDictionary: CacheDictionary = {};
-        (await this.List(dictionary, method)).forEach(x => {
+        (await this.List(dictionary, method, data)).forEach(x => {
             cacheDictionary[<string>x.id] = x;
         });
         return cacheDictionary;
     }
 
-    public async ListAsSelectItems(dictionary: string, method?: string): Promise<SelectItem[]> {
-        return (await this.List(dictionary, method)).map(x => new SelectItem({text: x.name ? x.name : x.title, value: x.id}));
+    public async ListAsSelectItems(dictionary: string, method?: string, data?: any): Promise<SelectItem[]> {
+        return (await this.List(dictionary, method, data)).map(x => new SelectItem({text: x.name ? x.name : x.title, value: x.id}));
     }
 
     public Search<T>(dictionary: string, data?: any, method?: string): Promise<T[]> {
