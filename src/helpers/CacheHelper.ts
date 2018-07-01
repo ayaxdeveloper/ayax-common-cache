@@ -3,18 +3,19 @@ import * as moment from 'moment';
 import { SearchResponse } from "ayax-common-types";
 import { OperationResult } from "ayax-common-operation";
 
-export const CacheHelper = {
-    ToCache<T>(name: string, data: T[], cacheExpiresAfter: number) {
-        localStorage.setItem(name.toLowerCase(), JSON.stringify(new CacheObject<T>({ data: data, expires: moment().add(cacheExpiresAfter, "m").toDate()})));
-    },
-    TryFromCache<T>(fetchPromise: () => Promise<T[]>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+export class CacheHelper {
+    static ToCache<T>(name: string, data: T[], cacheExpiresAfter: number) {
+        localStorage.setItem(name.toLowerCase(), JSON.stringify(new CacheObject<T>({ data, expires: moment().add(cacheExpiresAfter, "m").toDate()})));
+    }
+
+    static TryFromCache<T>(fetchPromise: () => Promise<T[]>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         if(data) {
             url = `${url}_${JSON.stringify(data)}`;
         }
         return new Promise((resolve) => {
-            let storage = localStorage.getItem(url);
+            const storage = localStorage.getItem(url);
             if(storage) {
-                let cache: CacheObject<T> = JSON.parse(storage);
+                const cache: CacheObject<T> = JSON.parse(storage);
                 if(moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
@@ -29,16 +30,17 @@ export const CacheHelper = {
                     resolve(response);
                 });
             }
-        })
-    },
-    TryOperationPromiseFromCache<T>(fetchPromise: Promise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+        });
+    }
+
+    static TryOperationPromiseFromCache<T>(fetchPromise: Promise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         if(data) {
             url = `${url}_${JSON.stringify(data)}`;
         }
         return new Promise((resolve) => {
-            let storage = localStorage.getItem(url);
+            const storage = localStorage.getItem(url);
             if(storage) {
-                let cache: CacheObject<T> = JSON.parse(storage);
+                const cache: CacheObject<T> = JSON.parse(storage);
                 if(moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
@@ -53,16 +55,17 @@ export const CacheHelper = {
                     resolve(response.result);
                 });
             }
-        })
-    },
-    TryOperationSearchResponseFromCache<T>(fetchPromise: Promise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+        });
+    }
+    
+    static TryOperationSearchResponseFromCache<T>(fetchPromise: Promise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         if(data) {
             url = `${url}_${JSON.stringify(data)}`;
         }
         return new Promise((resolve) => {
-            let storage = localStorage.getItem(url);
+            const storage = localStorage.getItem(url);
             if(storage) {
-                let cache: CacheObject<T> = JSON.parse(storage);
+                const cache: CacheObject<T> = JSON.parse(storage);
                 if(moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
@@ -77,6 +80,6 @@ export const CacheHelper = {
                     resolve(response.result.data);
                 });
             }
-        })
+        });
     }
 }

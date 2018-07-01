@@ -25,12 +25,12 @@ export class CacheService implements ICacheService {
     }
 
     public async List(dictionary: string, method?: string): Promise<CacheItem[]> {
-        let url = method ? `/${dictionary}/${method}` : `/${dictionary}/list`;
+        const url = method ? `/${dictionary}/${method}` : `/${dictionary}/list`;
         return (await CacheHelper.TryFromCache<CacheItem>(() => this.Fetch<CacheItem>('get', url), this._cacheExpiresAfter, 'get', url, null)).sort(ArraySortHelper.byOrder);
     }
 
     public async ListAsDictionary(dictionary: string, method?: string): Promise<CacheDictionary> {
-        let cacheDictionary: CacheDictionary = {};
+        const cacheDictionary: CacheDictionary = {};
         (await this.List(dictionary, method)).forEach(x => {
             cacheDictionary[<string>x.id] = x;
         });
@@ -42,7 +42,7 @@ export class CacheService implements ICacheService {
     }
 
     public Search<T>(dictionary: string, data?: any, method?: string): Promise<T[]> {
-        let url = method ? `/${dictionary}/${method}` : `/${dictionary}/search`;
+        const url = method ? `/${dictionary}/${method}` : `/${dictionary}/search`;
         return CacheHelper.TryFromCache<T>(() => this.Fetch<T>('search', url, data), this._cacheExpiresAfter, 'search', url, data);
     }
 
@@ -52,12 +52,12 @@ export class CacheService implements ICacheService {
                 return this._staticCache[url];
             }
             switch(method.toLocaleLowerCase()) {
-                case 'get':
-                return (await this._operationService.get<T[]>(url)).ensureSuccess();
                 case 'post': 
                 return (await this._operationService.post<T[]>(url, data)).ensureSuccess();
                 case 'search': 
                 return (await this._operationService.post<SearchResponse<T[]>>(url, data)).ensureSuccess().data;
+                default:
+                return (await this._operationService.get<T[]>(url)).ensureSuccess();
             }
             
         } catch (e) {

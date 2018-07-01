@@ -4,8 +4,8 @@ export class CacheItem {
     id: number | string | guid;
     name: string;
     title: string;
-    order: number = 0;
-    isActive: boolean = true;
+    order = 0;
+    isActive = true;
     notes: string;
     constructor(init?: Partial<CacheItem>) {
         if(init) {
