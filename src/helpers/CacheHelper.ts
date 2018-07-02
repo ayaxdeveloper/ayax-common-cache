@@ -33,7 +33,7 @@ export class CacheHelper {
         });
     }
 
-    static TryOperationPromiseFromCache<T>(fetchPromise: Promise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+    static TryOperationPromiseFromCache<T>(fetchPromise: () => Promise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         if (data) {
             url = `${url}_${JSON.stringify(data)}`;
         }
@@ -44,13 +44,13 @@ export class CacheHelper {
                 if (moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
-                    fetchPromise.then((response) => {
+                    fetchPromise().then((response) => {
                         CacheHelper.ToCache(url, response.result, cacheExpiresAfter);
                         resolve(response.result);
                     });
                 }
             } else {
-                fetchPromise.then((response) => {
+                fetchPromise().then((response) => {
                     CacheHelper.ToCache(url, response.result, cacheExpiresAfter);
                     resolve(response.result);
                 });
@@ -58,7 +58,7 @@ export class CacheHelper {
         });
     }
     
-    static TryOperationSearchResponseFromCache<T>(fetchPromise: Promise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
+    static TryOperationSearchResponseFromCache<T>(fetchPromise: () => Promise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         if (data) {
             url = `${url}_${JSON.stringify(data)}`;
         }
@@ -69,13 +69,13 @@ export class CacheHelper {
                 if (moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
-                    fetchPromise.then((response) => {
+                    fetchPromise().then((response) => {
                         CacheHelper.ToCache(url, response.result.data, cacheExpiresAfter);
                         resolve(response.result.data);
                     });
                 }
             } else {
-                fetchPromise.then((response) => {
+                fetchPromise().then((response) => {
                     CacheHelper.ToCache(url, response.result.data, cacheExpiresAfter);
                     resolve(response.result.data);
                 });
