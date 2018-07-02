@@ -8,7 +8,7 @@ export class CacheItem {
     isActive = true;
     notes: string;
     constructor(init?: Partial<CacheItem>) {
-        if(init) {
+        if (init) {
             Object.assign(this, init);
         }
     }

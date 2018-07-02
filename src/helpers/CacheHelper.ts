@@ -1,7 +1,7 @@
-import { CacheObject } from "../types/CacheObject";
-import * as moment from 'moment';
-import { SearchResponse } from "ayax-common-types";
 import { OperationResult } from "ayax-common-operation";
+import { SearchResponse } from "ayax-common-types";
+import * as moment from "moment";
+import { CacheObject } from "../types/CacheObject";
 
 export class CacheHelper {
     static ToCache<T>(name: string, data: T[], cacheExpiresAfter: number) {
@@ -9,14 +9,14 @@ export class CacheHelper {
     }
 
     static TryFromCache<T>(fetchPromise: () => Promise<T[]>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
-        if(data) {
+        if (data) {
             url = `${url}_${JSON.stringify(data)}`;
         }
         return new Promise((resolve) => {
             const storage = localStorage.getItem(url);
-            if(storage) {
+            if (storage) {
                 const cache: CacheObject<T> = JSON.parse(storage);
-                if(moment(cache.expires).isAfter() && cache.data.length > 0) {
+                if (moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
                     fetchPromise().then((response) => {
@@ -34,14 +34,14 @@ export class CacheHelper {
     }
 
     static TryOperationPromiseFromCache<T>(fetchPromise: Promise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
-        if(data) {
+        if (data) {
             url = `${url}_${JSON.stringify(data)}`;
         }
         return new Promise((resolve) => {
             const storage = localStorage.getItem(url);
-            if(storage) {
+            if (storage) {
                 const cache: CacheObject<T> = JSON.parse(storage);
-                if(moment(cache.expires).isAfter() && cache.data.length > 0) {
+                if (moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
                     fetchPromise.then((response) => {
@@ -59,14 +59,14 @@ export class CacheHelper {
     }
     
     static TryOperationSearchResponseFromCache<T>(fetchPromise: Promise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
-        if(data) {
+        if (data) {
             url = `${url}_${JSON.stringify(data)}`;
         }
         return new Promise((resolve) => {
             const storage = localStorage.getItem(url);
-            if(storage) {
+            if (storage) {
                 const cache: CacheObject<T> = JSON.parse(storage);
-                if(moment(cache.expires).isAfter() && cache.data.length > 0) {
+                if (moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
                     fetchPromise.then((response) => {
