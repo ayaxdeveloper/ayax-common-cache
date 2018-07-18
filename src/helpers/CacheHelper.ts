@@ -10,10 +10,13 @@ export class CacheHelper {
 
     static TryFromCache<T>(fetchPromise: () => Promise<T[]>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         if (data) {
-            url = `${url}_${JSON.stringify(data)}`;
+            url = `${url}_${this.StringifyData(data)}`;
         }
+        url = url.toLowerCase();
         return new Promise((resolve) => {
             const storage = localStorage.getItem(url);
+            console.log(url);
+            console.log(storage); 
             if (storage) {
                 const cache: CacheObject<T> = JSON.parse(storage);
                 if (moment(cache.expires).isAfter() && cache.data.length > 0) {
@@ -35,7 +38,7 @@ export class CacheHelper {
 
     static TryOperationPromiseFromCache<T>(fetchPromise: () => Promise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         if (data) {
-            url = `${url}_${JSON.stringify(data)}`;
+            url = `${url}_${this.StringifyData(data)}`;
         }
         return new Promise((resolve) => {
             const storage = localStorage.getItem(url);
@@ -60,7 +63,7 @@ export class CacheHelper {
     
     static TryOperationSearchResponseFromCache<T>(fetchPromise: () => Promise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
         if (data) {
-            url = `${url}_${JSON.stringify(data)}`;
+            url = `${url}_${this.StringifyData(data)}`;
         }
         return new Promise((resolve) => {
             const storage = localStorage.getItem(url);
@@ -81,5 +84,14 @@ export class CacheHelper {
                 });
             }
         });
+    }
+
+    private static StringifyData(data: any) {
+        const replaceArr = [/\{/, /\}/, /\"/, /\:/, /\,/ , /\[/, /\]/];
+        let str = JSON.stringify(data);
+        replaceArr.forEach(x => {
+            str = str.replace(new RegExp(x, "g"), "");
+        });
+        return str;
     }
 }
