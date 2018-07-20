@@ -15,8 +15,6 @@ export class CacheHelper {
         url = url.toLowerCase();
         return new Promise((resolve) => {
             const storage = localStorage.getItem(url);
-            console.log(url);
-            console.log(storage); 
             if (storage) {
                 const cache: CacheObject<T> = JSON.parse(storage);
                 if (moment(cache.expires).isAfter() && cache.data.length > 0) {
