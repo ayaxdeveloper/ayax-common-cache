@@ -1,7 +1,7 @@
-import { guid } from "ayax-common-types";
+import { Guid } from "ayax-common-types";
 
 export class CacheItem {
-    id: number | string | guid;
+    id: number | string | Guid;
     name: string;
     title: string;
     order = 0;
