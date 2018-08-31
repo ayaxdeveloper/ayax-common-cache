@@ -81,6 +81,8 @@ export class CacheHelper {
         let res = "";
         if (data) {
             res = `${url}_${this.StringifyData(data)}`;
+        } else {
+            res = url;
         }
         res = res.toLowerCase();
         return res;
