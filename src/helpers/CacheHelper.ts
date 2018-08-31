@@ -9,22 +9,22 @@ export class CacheHelper {
     }
 
     static TryFromCache<T>(fetchPromise: () => Promise<T[]>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
-        url = this.FormUrl(url, data);
+        const cacheName = this.FormCacheName(url, data);
         return new Promise((resolve) => {
-            const storage = localStorage.getItem(url);
+            const storage = localStorage.getItem(cacheName);
             if (storage) {
                 const cache: CacheObject<T> = JSON.parse(storage);
                 if (moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
                     fetchPromise().then((response) => {
-                        CacheHelper.ToCache(url, response, cacheExpiresAfter);
+                        CacheHelper.ToCache(cacheName, response, cacheExpiresAfter);
                         resolve(response);
                     });
                 }
             } else {
                 fetchPromise().then((response) => {
-                    CacheHelper.ToCache(url, response, cacheExpiresAfter);
+                    CacheHelper.ToCache(cacheName, response, cacheExpiresAfter);
                     resolve(response);
                 });
             }
@@ -32,22 +32,22 @@ export class CacheHelper {
     }
 
     static TryOperationPromiseFromCache<T>(fetchPromise: () => Promise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
-        url = this.FormUrl(url, data);
+        const cacheName = this.FormCacheName(url, data);
         return new Promise((resolve) => {
-            const storage = localStorage.getItem(url);
+            const storage = localStorage.getItem(cacheName);
             if (storage) {
                 const cache: CacheObject<T> = JSON.parse(storage);
                 if (moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
                     fetchPromise().then((response) => {
-                        CacheHelper.ToCache(url, response.result, cacheExpiresAfter);
+                        CacheHelper.ToCache(cacheName, response.result, cacheExpiresAfter);
                         resolve(response.result);
                     });
                 }
             } else {
                 fetchPromise().then((response) => {
-                    CacheHelper.ToCache(url, response.result, cacheExpiresAfter);
+                    CacheHelper.ToCache(cacheName, response.result, cacheExpiresAfter);
                     resolve(response.result);
                 });
             }
@@ -55,29 +55,29 @@ export class CacheHelper {
     }
     
     static TryOperationSearchResponseFromCache<T>(fetchPromise: () => Promise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
-        url = this.FormUrl(url, data);
+        const cacheName = this.FormCacheName(url, data);
         return new Promise((resolve) => {
-            const storage = localStorage.getItem(url);
+            const storage = localStorage.getItem(cacheName);
             if (storage) {
                 const cache: CacheObject<T> = JSON.parse(storage);
                 if (moment(cache.expires).isAfter() && cache.data.length > 0) {
                     resolve(cache.data);
                 } else {
                     fetchPromise().then((response) => {
-                        CacheHelper.ToCache(url, response.result.data, cacheExpiresAfter);
+                        CacheHelper.ToCache(cacheName, response.result.data, cacheExpiresAfter);
                         resolve(response.result.data);
                     });
                 }
             } else {
                 fetchPromise().then((response) => {
-                    CacheHelper.ToCache(url, response.result.data, cacheExpiresAfter);
+                    CacheHelper.ToCache(cacheName, response.result.data, cacheExpiresAfter);
                     resolve(response.result.data);
                 });
             }
         });
     }
 
-    private static FormUrl(url: string, data: any): string {
+    private static FormCacheName(url: string, data: any): string {
         let res = "";
         if (data) {
             res = `${url}_${this.StringifyData(data)}`;
