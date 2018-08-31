@@ -9,10 +9,7 @@ export class CacheHelper {
     }
 
     static TryFromCache<T>(fetchPromise: () => Promise<T[]>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
-        if (data) {
-            url = `${url}_${this.StringifyData(data)}`;
-        }
-        url = url.toLowerCase();
+        url = this.FormUrl(url, data);
         return new Promise((resolve) => {
             const storage = localStorage.getItem(url);
             if (storage) {
@@ -35,9 +32,7 @@ export class CacheHelper {
     }
 
     static TryOperationPromiseFromCache<T>(fetchPromise: () => Promise<OperationResult<T[]>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
-        if (data) {
-            url = `${url}_${this.StringifyData(data)}`;
-        }
+        url = this.FormUrl(url, data);
         return new Promise((resolve) => {
             const storage = localStorage.getItem(url);
             if (storage) {
@@ -60,9 +55,7 @@ export class CacheHelper {
     }
     
     static TryOperationSearchResponseFromCache<T>(fetchPromise: () => Promise<OperationResult<SearchResponse<T[]>>>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
-        if (data) {
-            url = `${url}_${this.StringifyData(data)}`;
-        }
+        url = this.FormUrl(url, data);
         return new Promise((resolve) => {
             const storage = localStorage.getItem(url);
             if (storage) {
@@ -82,6 +75,15 @@ export class CacheHelper {
                 });
             }
         });
+    }
+
+    private static FormUrl(url: string, data: any): string {
+        let res = "";
+        if (data) {
+            res = `${url}_${this.StringifyData(data)}`;
+        }
+        res = res.toLowerCase();
+        return res;
     }
 
     private static StringifyData(data: any) {
