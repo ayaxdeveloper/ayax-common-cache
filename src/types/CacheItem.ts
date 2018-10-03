@@ -1,6 +1,6 @@
-import { Guid } from "ayax-common-types";
+import { Guid, IListItem } from "ayax-common-types";
 
-export class CacheItem {
+export class CacheItem implements IListItem {
     id: number | string | Guid;
     name: string;
     title: string;
@@ -17,7 +17,5 @@ export class CacheItem {
         if (init) {
             Object.assign(this, init);
         }
-
-
     }
 }

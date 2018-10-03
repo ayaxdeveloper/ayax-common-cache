@@ -1,6 +1,6 @@
 {
   "name": "ayax-common-cache",
-  "version": "3.0.18",
+  "version": "3.1.0",
   "description": "Ayax Common Services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,7 +22,7 @@
   "dependencies": {
     "ayax-common-helpers": "^2.2.11",
     "ayax-common-operation": "^1.0.21",
-    "ayax-common-types": "^3.0.21",
+    "ayax-common-types": "^3.1.1",
     "moment": "^2.20.1"
   },
   "devDependencies": {

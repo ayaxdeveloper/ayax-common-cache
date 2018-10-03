@@ -1,6 +1,6 @@
 import { ArraySortHelper } from "ayax-common-helpers";
 import { IOperationService } from "ayax-common-operation";
-import { SearchResponse, SelectItem } from "ayax-common-types";
+import { SearchResponse, SelectItem, IListItem } from "ayax-common-types";
 import { CacheHelper } from "../helpers/CacheHelper";
 import { CacheItem } from "../types/CacheItem";
 import { ICacheService } from "../types/ICacheService";
@@ -24,7 +24,7 @@ export class CacheService implements ICacheService {
         return CacheHelper.TryFromCache<T>(() => this.Fetch<T>("post", url, data), this._cacheExpiresAfter, "post", url, data);
     }
 
-    public async List(dictionary: string, method?: string): Promise<CacheItem[]> {
+    public async List(dictionary: string, method?: string): Promise<IListItem[]> {
         const url = method ? `/${dictionary}/${method}` : `/${dictionary}/list`;
         return await CacheHelper.TryFromCache<CacheItem>(() => this.Fetch<CacheItem>("get", url), this._cacheExpiresAfter, "get", url, null).then(x => x.sort(ArraySortHelper.sortBy(["order","title"]).asc));
     }
@@ -67,4 +67,4 @@ export class CacheService implements ICacheService {
     }
 }
 
-export type CacheDictionary = {[index: string]: CacheItem};
+export type CacheDictionary = {[index: string]: IListItem};
