@@ -27,12 +27,13 @@ export class CacheService implements ICacheService {
     public async List(dictionary: string, method?: string, disableSort?: boolean): Promise<IListItem[]> {
         const url = method ? `/${dictionary}/${method}` : `/${dictionary}/list`;
 
+        let result = await CacheHelper.TryFromCache<CacheItem>(() => this.Fetch<CacheItem>("get", url), this._cacheExpiresAfter, "get", url, null);
+
         if (disableSort) {
-            return await CacheHelper.TryFromCache<CacheItem>(() => this.Fetch<CacheItem>("get", url), this._cacheExpiresAfter, "get", url, null);
+            return result;
         }
 
-        return await CacheHelper.TryFromCache<CacheItem>(() => this.Fetch<CacheItem>("get", url), this._cacheExpiresAfter, "get", url, null)
-            .then(x => x.sort(ArraySortHelper.sortBy(["order","title"]).asc));
+        return result.sort(ArraySortHelper.sortBy(["order","title"]).asc);
     }
 
     public async ListAsDictionary(dictionary: string, method?: string): Promise<CacheDictionary> {
