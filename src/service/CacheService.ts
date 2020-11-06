@@ -45,7 +45,7 @@ export class CacheService implements ICacheService {
     }
 
     public async ListAsSelectItems(dictionary: string, method?: string): Promise<SelectItem[]> {
-        return (await this.List(dictionary, method)).map(x => new SelectItem({text: x.name ? x.name : x.title, value: x.id}));
+        return (await this.List(dictionary, method)).map(x => new SelectItem({text: x.name ? x.name : x.title, value: x.id, disable: x.isDisabled}));
     }
 
     public Search<T>(dictionary: string, data?: any, method?: string): Promise<T[]> {
