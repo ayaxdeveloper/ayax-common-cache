@@ -22,7 +22,7 @@
   "dependencies": {
     "ayax-common-helpers": "^2.2.11",
     "ayax-common-operation": "^1.0.21",
-    "ayax-common-types": "^3.1.1",
+    "ayax-common-types": "^3.1.12",
     "moment": "^2.20.1"
   },
   "devDependencies": {
