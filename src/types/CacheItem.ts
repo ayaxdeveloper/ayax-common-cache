@@ -6,6 +6,7 @@ export class CacheItem implements IListItem {
     title: string;
     order = 0;
     isActive = true;
+    isDisabled: boolean;
     notes: string;
     constructor(init?: Partial<CacheItem>) {
         if (init.title && !init.name) {
