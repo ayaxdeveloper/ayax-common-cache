@@ -36,7 +36,7 @@ export class CacheService implements ICacheService {
         return result.sort(ArraySortHelper.sortBy(["order","title"]).asc);
     }
 
-    public async ListAsDictionary(dictionary: string, method?: string): Promise<CacheDictionary> {
+    public async ListAsDictionary(dictionary: string, method?: string, disableSort?: boolean): Promise<CacheDictionary> {
         const cacheDictionary: CacheDictionary = {};
         (await this.List(dictionary, method)).forEach(x => {
             cacheDictionary[<string> x.id] = x;
@@ -44,8 +44,8 @@ export class CacheService implements ICacheService {
         return cacheDictionary;
     }
 
-    public async ListAsSelectItems(dictionary: string, method?: string): Promise<SelectItem[]> {
-        return (await this.List(dictionary, method)).map(x => new SelectItem({ text: x.name ? x.name : x.title, value: x.id, disabled: x.isDisabled}));
+    public async ListAsSelectItems(dictionary: string, method?: string, disableSort?: boolean): Promise<SelectItem[]> {
+        return (await this.List(dictionary, method, disableSort)).map(x => new SelectItem({ text: x.name ? x.name : x.title, value: x.id, disabled: x.isDisabled}));
     }
 
     public Search<T>(dictionary: string, data?: any, method?: string): Promise<T[]> {
