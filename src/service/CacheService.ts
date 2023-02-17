@@ -38,7 +38,7 @@ export class CacheService implements ICacheService {
 
     public async ListAsDictionary(dictionary: string, method?: string, disableSort?: boolean): Promise<CacheDictionary> {
         const cacheDictionary: CacheDictionary = {};
-        (await this.List(dictionary, method)).forEach(x => {
+        (await this.List(dictionary, method, disableSort)).forEach(x => {
             cacheDictionary[<string> x.id] = x;
         });
         return cacheDictionary;
