@@ -5,7 +5,28 @@ import { CacheObject } from "../types/CacheObject";
 
 export class CacheHelper {
     static ToCache<T>(name: string, data: T[], cacheExpiresAfter: number) {
-        localStorage.setItem(name.toLowerCase(), JSON.stringify(new CacheObject<T>({ data, expires: moment().add(cacheExpiresAfter, "m").toDate()})));
+        try {
+            localStorage.setItem(name.toLowerCase(), JSON.stringify(new CacheObject<T>({ data, expires: moment().add(cacheExpiresAfter, "m").toDate()})));
+        }
+        catch (ex) {
+            if (ex.name === "QuotaExceededError" || ex.name === "DOMException") {
+                const currentUser = localStorage.getItem("currentUser");
+                const accessRules = localStorage.getItem("accessRules");
+                localStorage.clear();
+        
+                if (currentUser) {
+                  localStorage.setItem("currentUser", currentUser);
+                }
+                if (accessRules) {
+                  localStorage.setItem("accessRules", accessRules);
+                }
+        
+                localStorage.setItem(name.toLowerCase(), JSON.stringify(new CacheObject<T>({ data, expires: moment().add(cacheExpiresAfter, "m").toDate()})));
+            }
+            else {
+                throw ex;
+            }
+        }
     }
 
     static TryFromCache<T>(fetchPromise: () => Promise<T[]>, cacheExpiresAfter: number, method: string, url: string, data?: any): Promise<T[]> {
