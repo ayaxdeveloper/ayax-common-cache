@@ -20,8 +20,18 @@ export class CacheHelper {
                 if (accessRules) {
                   localStorage.setItem("accessRules", accessRules);
                 }
-        
-                localStorage.setItem(name.toLowerCase(), JSON.stringify(new CacheObject<T>({ data, expires: moment().add(cacheExpiresAfter, "m").toDate()})));
+                
+                try {
+                    localStorage.setItem(name.toLowerCase(), JSON.stringify(new CacheObject<T>({ data, expires: moment().add(cacheExpiresAfter, "m").toDate()})));
+                }
+                catch(exception) {
+                    if (exception.name === "QuotaExceededError") {
+
+                    }
+                    else {
+                        throw exception; 
+                    }
+                }
             }
             else {
                 throw ex;
